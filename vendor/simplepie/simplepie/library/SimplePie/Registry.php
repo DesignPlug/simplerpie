@@ -113,6 +113,7 @@ class SimplePie_Registry
 	 */
 	public function register($type, $class, $legacy = false)
 	{
+
 		if (!is_subclass_of($class, $this->default[$type]))
 		{
 			return false;
@@ -160,7 +161,7 @@ class SimplePie_Registry
 	public function &create($type, $parameters = array())
 	{
 		$class = $this->get_class($type);
-
+                
 		if (in_array($class, $this->legacy))
 		{
 			switch ($type)

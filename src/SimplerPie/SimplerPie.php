@@ -2,16 +2,14 @@
 
 
 class SimplerPie extends \SimplePie{
-
-
-    /**
-     * Set which class SimplePie uses for handling feed items
-     */
+ 
     
-    public function set_item_class($class = 'SimplerPie\SimplerPie_Item')
-    {
-        return $this->registry->register('Item', $class, true);
-    }    
+    public function __construct(){
+        
+        call_user_func_array(array('parent', '__construct'), func_get_args());
+        
+        $this->set_item_class('SimplerPie\SimplerPie_Item');
+    }
     
     
     public function get_items_array($start = 0, $end = 0){

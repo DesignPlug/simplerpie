@@ -1,12 +1,16 @@
 <?php namespace SimplerPie;
 
-class SimplerPie_Item extends SimplePie_Item{
+class SimplerPie_Item extends \SimplePie_Item{
     
-    protected static $item_keys = array();
+    protected static $item_keys         = array(),
+                     $exclude_item_keys = array("get_keys", 
+                                                "get_item_tags",
+                                                "get_enclosure",
+                                                "get_enclosures");
     
     public function __toString(){
         
-        return $this->to_json();
+        return json_encode($this->to_json());
         
     }
     
@@ -16,7 +20,11 @@ class SimplerPie_Item extends SimplePie_Item{
         $item_array    = array();
         
         foreach($keys as $k){
-            $item_array[$k] = $this->{"get_".$k}();
+            $v = $this->{"get_".$k}();
+            if(is_object($v)){ 
+                continue;
+            }
+            $item_array[$k] = $v;
         }
         return $item_array;
     }
@@ -36,7 +44,7 @@ class SimplerPie_Item extends SimplePie_Item{
         $methods     = get_class_methods($this);
         $keys        = array_map(function($v){
             
-            return strpos($v, "get_") === 0 ? substr($v, 0, 4) : null;
+            return strpos($v, "get_") === 0 && !in_array($v, static::$exclude_item_keys) ? substr($v, 4, strlen($v)) : null;
             
         }, $methods);
         
